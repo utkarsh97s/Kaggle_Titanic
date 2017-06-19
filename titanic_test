@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jun 18 03:09:33 2017
+
+@author: utkarshsingh
+"""
+
+test_set2 = pd.read_csv('test.csv')
+test_set2 = test_set2.drop('Cabin', 1)
+
+# mark zero values as missing or NaN
+test_set2[[3]] = test_set2[[3]].replace(0, np.NaN)
+# fill missing values with mean column values
+test_set2.fillna(test_set2.mean(), inplace=True)
+# count the number of NaN values in each column
+print(test_set2.isnull().sum())
+
+test_set2 = test_set2.iloc[:,[1,3,4,5,6,8,9]].values
+
+# Encoding categorical data
+# Encoding the Independent Variable
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+labelencoder_test_set2 = LabelEncoder()
+test_set2[:, 1] = labelencoder_test_set2.fit_transform(test_set2[:, 1])
+onehotencoder = OneHotEncoder(categorical_features = [0])
+test_set2 = onehotencoder.fit_transform(test_set2).toarray()
+
+
+
+# Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+test_set2 = sc.fit_transform(test_set2)
+
+# Fitting Kernel SVM to the Training set
+from sklearn.svm import SVC
+classifier = SVC(kernel = 'rbf', random_state = 0,gamma =0.1)
+classifier.fit(X_train, y_train)
+
+
+# Predicting the Test set results
+y_pred = classifier.predict(test_set2)
+
+
+
+                        
+
+
+                
+
